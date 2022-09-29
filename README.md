@@ -1,20 +1,56 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+kubectl create ns redis
+kubectl get ns
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+kubectl apply -f sc.yaml
+kubectl get sc
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+kubectl apply -f pv.yaml
+kubectl get pv
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+kubectl apply -n redis -f redis-config.yaml
+kubectl get configmap -n redis
+
+kubectl apply -n redis -f redis-statefulset.yaml
+kubectl get pods -n redis
+
+kubectl apply -n redis -f redis-service.yaml
+kubectl get service -n redis
+
+------Test  redis cluster-------
+
+kubectl -n redis logs redis-0
+kubectl -n redis describe pod redis-0
+
+
+kubectl -n redis exec -it redis-0 -- sh
+redis-cli 
+auth a-very-complex-password-here
+info replication
+
+
+
+kubectl -n redis exec -it redis-1 -- sh
+redis-cli 
+auth a-very-complex-password-here
+info replication
+
+
+
+kubectl -n redis exec -it redis-0 -- sh
+redis-cli 
+auth a-very-complex-password-here
+
+SET emp1 raja
+SET emp2 mano
+SET emp3 ram
+KEYS *
+
+kubectl -n redis exec -it redis-1 -- sh
+redis-cli 
+auth a-very-complex-password-here
+
+SET emp1 raja
+SET emp2 mano
+SET emp3 ram
+KEYS *
